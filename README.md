@@ -1,4 +1,4 @@
 # Postaverse
 The Postaverse source code.
 
-Neee help? Contact [codeblock]support@postaverse.net[/codeblock]
+Neee help? Contact support@postaverse.net
