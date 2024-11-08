@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Admin{% endblock %}
+{% block pageName %}Admin Panel{% endblock %}
+{% block content %}
+<h2>{{ name }}</h2>
+<h3>{{ error }}</h3>
+<br>
+<div>
+    {% if admin.rank == 3 %}
+    <h3>Add an admin</h3>
+    <form action="/add-admin" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="submit" value="Add Admin">
+    </form>
+    <br>
+    {% endif %}
+    {% if admin.rank >= 2 %}
+    <h3>Dangerous - Delete all posts of a user</h3>
+    <form action="/delete-user-posts" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="submit" value="Delete">
+    </form>
+    <br>
+    {% endif %}
+    {% if admin.rank == 1 %}
+    <h3>Approved Reports</h3>
+    {{ admin.approved }}/25
+    <br>
+    <h3>Report Post</h3>
+    <form action="/report-admin" method="post">
+        <input type="text" name="pid" placeholder="Post ID" required>
+        <input type="submit" value="Report">
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

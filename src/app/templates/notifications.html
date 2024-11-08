@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Notifications{% endblock %}
+{% block pageName %}Notifications{% endblock %}
+{% block content %}
+{% for n in notifs %}
+<br>
+<div class="posts">
+    {% if n.post_id != 0 %}
+    <a href="/posts/{{ n.post_id }}?r=1&p={{ n.post_id }}">
+    {% elif n.follow_id != 0 %}
+    <a href="/profile/{{ n.follow_id }}?r=1&p={{ n.follow_id }}">
+    {% endif %}
+        <h2>{{ n.message }}</h2>
+        <h3>Read: {% if n.is_read == 1 %}True{% else %}False{% endif %}</h3>
+        <h3><span class="timestamp" data-timestamp="{{ n.created_at }}">{{ n.created_at}}</span></h3>
+    </a>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var timestamps = document.querySelectorAll('.timestamp');
+
+        function convertUTCDateToLocalDate(date) {
+            var newDate = new Date(date);
+            newDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return newDate;
+        }
+
+        timestamps.forEach(function (element) {
+            var utcTimestamp = element.getAttribute('data-timestamp');
+            var localTime = convertUTCDateToLocalDate(new Date(utcTimestamp)).toLocaleString();
+            element.innerHTML = localTime;
+        });
+    });
+</script>
+{% endfor %}
+{% endblock %}

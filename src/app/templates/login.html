@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
+        <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+        <title>Postaverse - Login</title>
+    </head>
+    <body class="center">
+        <div>
+            <h1>Login</h1>
+        </div>
+        <div>
+            <h2>{{ error }}</h2>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="Username" autofocus required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="submit" value="Login">
+            </form>
+            <br>
+            <form action="/signup-page" method="post">
+                <input type="submit" value="Go to Signup">
+            </form>
+        </div>
+    </body>
+</html>

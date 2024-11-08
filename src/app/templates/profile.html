@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Profile{% endblock %}
+{% block pageName %}Profile{% endblock %}
+{% block content %}
+<br>
+{% if user.display %}
+<div class="i"><h1>{{ user.display }}</h1><p class="b">@{{ user.username }}</p></div>
+{% else %}
+<h1>@{{ user.username }}</h1>
+{% endif %}
+<br>
+<h3>Badges</h3>
+<h3 class="badges">{% if badges %}{% for badge in badges %} <img src="../static/images/{{ badge.type }}.jpg"
+        alt="{{ badge.type }}" width="2.5%" height="2.5%" title="Badge: {{ badge.type }}"> {% endfor %} {% else %} This user has no badges. {% endif %}
+</h3>
+<h3>{{ error }}</h3>
+<br>
+<div>
+    <h3>{{ user.bio }}</h3>
+</div>
+<div>
+    <h2><a href="{{ url_for('followers', user_id=profile_id) }}">Followers: {{ followers_count }}</a></h2>
+    {% if session['user_id'] != profile_id %}
+    {% if is_following %}
+    <!-- Unfollow Form -->
+    <form action="/unfollow/{{ profile_id }}" method="post">
+        <input type="submit" value="Unfollow">
+    </form>
+    {% else %}
+    <!-- Follow Form -->
+    <form action="/follow/{{ profile_id }}" method="post">
+        <input type="submit" value="Follow">
+    </form>
+    {% endif %}
+    {% endif %}
+</div>
+<h2>Recent Posts</h2>
+<hr>
+{% for post in posts %}
+<div class="posts">
+    <span>
+        <a href="/posts/{{ post.post_id }}">
+            <h1>{{ post.name }}</h1>
+                <h3>Posted on: <span class="timestamp" data-timestamp="{{ post.created_at }}"></span></h3>
+        </a>
+    </span>
+</div>
+<br>
+{% endfor %}
+</section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var timestamps = document.querySelectorAll('.timestamp');
+
+        function convertUTCDateToLocalDate(date) {
+            var newDate = new Date(date);
+            newDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return newDate;
+        }
+
+        timestamps.forEach(function (element) {
+            var utcTimestamp = element.getAttribute('data-timestamp');
+            var localTime = convertUTCDateToLocalDate(new Date(utcTimestamp)).toLocaleString();
+            element.innerHTML = localTime;
+        });
+    });
+</script>
+{% endblock %}

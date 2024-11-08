@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="/static/styles.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+    <title>Postaverse - Signup</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#username').on('input', function() { // Trigger on input event
+                var inputUsername = $(this).val();
+                if (inputUsername.length > 0) { // Check if the input is not empty
+                    $.ajax({
+                        url: '/get-user',
+                        method: 'POST',
+                        data: { username: inputUsername },
+                        success: function(response) {
+                            $('#result-username').text("Username: " + response.username); // Update the h3 text
+                        },
+                        error: function() {
+                            $('#result-username').text("Error generating username.");
+                        }
+                    });
+                } else {
+                    $('#result-username').text("Your username will appear here once you start typing."); // Reset if input is empty
+                }
+            });
+        });
+    </script>
+</head>
+
+<body class="center">
+    <div>
+        <h1>Signup</h1>
+    </div>
+    <div>
+        <h2>{{ error }}</h2>
+        <form action="/signup" method="post" id="signup-form">
+            <div><input type="email" name="email" placeholder="e-mail" autofocus required></div>
+            <div><input type="text" name="username" placeholder="Username" id="username" required></div>
+            <div><h3 id="result-username">Your username will appear here once you start typing.</h3></div>
+            <div><input type="password" name="password" placeholder="Password" id="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required></div>
+            <div><input type="date" name="birth" placeholder="Date of Birth" required></div>
+            <div><button type="submit">Submit</button></div>
+            {{ recaptcha }}
+        </form>
+        <h4>Password must have at least:</h4>
+        <p>One number</p>
+        <p>One special character</p>
+        <p>One capital letter</p>
+        <p>Eight characters</p>
+        <br>
+        <form action="/login-page" method="post">
+            <input type="submit" value="Go to Login">
+        </form>
+    </div>
+</body>
+
+</html>

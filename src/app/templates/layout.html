@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9138307603449049"
+        crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-9138307603449049">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link href="/static/styles.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    <section class="center">
+        <div>
+            <h1>{% block pageName %}{% endblock %}</h1>
+        </div>
+        {% if session["name"] and session["user_id"] %}
+        <nav>
+            <a href="/home"><img src="/static/images/home.png" width="25px"></a>
+            <a href="/feed"><img src="/static/images/feed.png" width="25px"></a>
+            <a href="/post-builder"><img src="/static/images/writing.png" width="25px"></a>
+            <a href="/profile/{{ session['user_id'] }}"><img src="/static/images/user.png" width="25px"></a>
+        </nav>
+        <nav>
+            <a href="javascript:void(0)" onclick="toggleDropdown()" class="dropbtn"><img src="/static/images/settings.png" width="25px" height="25px" style="z-index: -1; pointer-events: none;"></a>
+            <a href="/notifications">{% if notifcount %}<img src="/static/images/notification.png" width="25px">{% else %}<img src="/static/images/bell.png" width="25px">{% endif %}</a>
+            <div id="dropdownContent" class="dropdown-content">
+                <a href="/account">Account</a>
+                <a href="/info">Info</a>
+                <a href="/badges">Badges</a>
+                <hr class="d">
+                <a href="/logout">Log-out</a>
+            </div>
+            {% if session["admin"] == session["name"] %}
+            <a href="/admin"><img src="/static/images/admin.png" width="25px"></a>
+            {% endif %}
+        </nav>
+        {% else %}
+        <nav>
+            <a href="/home">Home</a>
+            <a href="/signup-page">Signup</a>
+            <a href="/login-page">Login</a>
+        </nav>
+        {% endif %}
+        <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9138307603449049"
+            crossorigin="anonymous"></script>
+        <!-- Ad 1 -->
+        <ins class="adsbygoogle" style="display:inline-block;width:180px;height:100px"
+            data-ad-client="ca-pub-9138307603449049" data-ad-slot="4711713070"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+        {% block content %}
+        {% endblock %}
+    </section>
+    <script>
+        function toggleDropdown() {
+            document.getElementById("dropdownContent").classList.toggle("show");
+        }
+
+        window.onclick = function (event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

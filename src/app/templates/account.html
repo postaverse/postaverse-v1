@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Account{% endblock %}
+{% block pageName %}Account{% endblock %}
+{% block content %}
+{% if session['user_id'] %}
+<div>
+    <h2>{{ error }}</h2>
+    <form action="/update-bio" method="post">
+        <div><textarea name="content" placeholder="Bio" required></textarea></div>
+        <div><input type="submit" value="Update Bio"></div>
+    </form>
+    <br>
+    <form action="/update-password" method="post">
+        <div><input type="password" name="password" placeholder="Current Password" required></div>
+        <div><input type="password" name="npassword" placeholder="New Password" required></div>
+        <div><input type="password" name="n2password" placeholder="New Password (again)" required></div>
+        <div><input type="submit" value="Update Password"></div>
+    </form>
+    <br>
+    <form action="/display-name-change" method="post">
+        <div><input type="text" name="display" placeholder="New Display Name" required></div>
+        <div><input type="submit" value="Update Display Name"></div>
+    </form>
+</div>
+{% endif %}
+{% endblock %}

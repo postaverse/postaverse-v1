@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Badges{% endblock %}
+{% block pageName %}Badges{% endblock %}
+{% block content %}
+<h2><img src="/static/images/alpha-testing.jpg" alt="alpha testing badge" width="2.5%" height="2.5%"> Alpha Badge: Awarded to people who joined during Alpha. {{ alpha }} user(s) have this badge.</h2>
+<h2><img src="/static/images/beta-testing.jpg" alt="alpha testing badge" width="2.5%" height="2.5%"> Beta Badge: Awarded to people who joined during Beta. {{ beta }} user(s) have this badge.</h2>
+<h2><img src="/static/images/admin.jpg" alt="alpha testing badge" width="2.5%" height="2.5%"> Admin Badge: Awarded to people who are admins. {{ admin }} user(s) have this badge.</h2>
+<h2><img src="/static/images/imposter.jpg" alt="alpha testing badge" width="2.5%" height="2.5%"> Imposter Badge: Awarded to <a href="https://postaverse.net/profile/6" class="see">Postaverse</a> for a fake Postaverse account. {{ imposter }} user(s) have this badge.</h2>
+{% endblock %}

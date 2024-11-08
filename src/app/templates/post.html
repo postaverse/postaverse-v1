@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Post{% endblock %}
+{% block pageName %}Post{% endblock %}
+{% block content %}
+<hr>
+<div class="posts">
+    <h2>{{ error }}</h2>
+    <span>
+        <div>
+            <a href="/profile/{{ post.user_id }}">
+                {% if post.display %}
+                <div class="i"><h2>{{ post.display }}</h2><p>@{{ post.username }}</p></div>
+                {% else %}
+                <h2>@{{ post.username }}</h2>
+                {% endif %}
+            </a>
+            <br>
+            {% if session["user_id"] == post.user_id %}
+            <a href="/delete-post/{{ post.post_id }}">Delete</a>
+            {% elif admin %}
+            {% if admin.rank >= 2 %}
+            <a href="/delete-post/{{ post.post_id }}">Delete</a>
+            {% endif %}
+            {% endif %}
+        </div>
+        <hr>
+        <h1>{{ post.name }}</h1>
+        <h4>{{ post.content|safe }}</h4>
+        <h3>Posted on: <span class="timestamp" data-timestamp="{{ post.created_at }}"></span></h3>
+    </span>
+</div>
+<hr>
+<h3>Likes: {{ likes }}</h3>
+<br>
+<form id="like-form-{{ post.post_id }}" action="/like/{{ post.post_id }}" method="post" target="like-frame">
+    <!-- Any necessary hidden inputs -->
+</form>
+
+<!-- The <a> tag the user will click -->
+<a href="#" onclick="document.getElementById('like-form-{{ post.post_id }}').submit(); return false;">
+    {{ 'Unlike' if liked else 'Like' }}
+</a>
+
+<!-- Invisible iframe for form submission -->
+<iframe name="like-frame" style="display: none;"></iframe>
+<br>
+
+<div class="comments">
+    <h2>Comments</h2>
+    <form action="/posts/{{ post.post_id }}/comment" method="post">
+        <div><textarea name="comment_content" required></textarea></div>
+        <div><button type="submit">Post Comment</button></div>
+    </form>
+    <br>
+    <hr>
+    {% for comment in comments %}
+    <div class="comment">
+        <a href="/profile/{{ comment.user_id }}">
+            {% if comment.display %}
+            <div class="i"><strong>{{ comment.display }}</strong><p>@{{ comment.username }}</p></div>
+            {% else %}
+            <strong>@{{ comment.username }}</strong>
+            {% endif %}
+        </a>
+        <p>{{ comment.content }}</p>
+        <span>Posted on: <span class="timestamp" data-timestamp="{{ comment.created_at }}"></span></span>
+        <hr>
+    </div>
+    {% else %}
+    <p>No comments yet.</p>
+    {% endfor %}
+</div>
+</section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var timestamps = document.querySelectorAll('.timestamp');
+
+        function convertUTCDateToLocalDate(date) {
+            var newDate = new Date(date);
+            newDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return newDate;
+        }
+
+        timestamps.forEach(function (element) {
+            var utcTimestamp = element.getAttribute('data-timestamp');
+            var localTime = convertUTCDateToLocalDate(new Date(utcTimestamp)).toLocaleString();
+            element.innerHTML = localTime;
+        });
+    });
+</script>
+{% endblock %}

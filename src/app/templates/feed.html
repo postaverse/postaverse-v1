@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Feed{% endblock %}
+{% block pageName %}Feed{% endblock %}
+{% block content %}
+{% if session['user_id'] %}
+<div>
+    <hr>
+    {% for post in posts %}
+    <div class="posts">
+        <span>
+            <a href="/profile/{{ post.user_id }}">
+                {% if post.display %}
+                <div class="i">
+                    <h2>{{ post.display }}</h2>
+                    <p class="b">@{{ post.username }}</p>
+                </div>
+                {% else %}
+                <h2 class="b">@{{ post.username }}</h2>
+                {% endif %}
+            </a>
+            <a href="/posts/{{ post.post_id }}">
+                <h3>{{ post.name }}</h2>
+                    <h3>Posted on: <span class="timestamp" data-timestamp="{{ post.created_at }}"></span></h3>
+            </a>
+        </span>
+    </div>
+    <br>
+    {% endfor %}
+</div>
+<div class="pagination">
+    {% if current_page > 1 %}
+    <a href="{{ url_for('home', page=current_page-1) }}">Previous</a>
+    {% endif %}
+
+    <!-- Display current page out of total pages -->
+    <span> | Page {{ current_page }} of {{ total_pages }} | </span>
+
+    {% if current_page < total_pages %} <a href="{{ url_for('home', page=current_page+1) }}">Next</a>
+        {% endif %}
+</div>
+<h2>That's all the posts!</h2>
+</section>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var timestamps = document.querySelectorAll('.timestamp');
+
+        function convertUTCDateToLocalDate(date) {
+            var newDate = new Date(date);
+            newDate.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+            return newDate;
+        }
+
+        timestamps.forEach(function (element) {
+            var utcTimestamp = element.getAttribute('data-timestamp');
+            var localTime = convertUTCDateToLocalDate(new Date(utcTimestamp)).toLocaleString();
+            element.innerHTML = localTime;
+        });
+    });
+</script>
+
+</html>
+{% endif %}
+{% endblock %}

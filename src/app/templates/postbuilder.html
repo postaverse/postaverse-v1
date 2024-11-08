@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Post Builder{% endblock %}
+{% block pageName %}Post Builder{% endblock %}
+{% block content %}
+<div>
+    <h2>{{ error }}</h2>
+    <form action="post" method="post">
+        <div>
+            <input type="text" name="name" placeholder="Post Name" required></input>
+        </div>
+        <div>
+            <textarea name="post-content" placeholder="Post Content" required></textarea>
+        </div>
+        <div>
+            <input type="submit" value="Post">
+        </div>
+    </form>
+</div>
+<br>
+<div>
+    <h2>Markup Guide</h2>
+    <h3>**Bold**</h3>
+    <h3>*Italic*</h3>
+    <h3>~Strikethrough~</h3>
+</div>
+{% endblock %}

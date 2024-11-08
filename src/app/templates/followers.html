@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Postaverse - Followers{% endblock %}
+{% block pageName %}Followers{% endblock %}
+{% block content %}
+<div>
+    <hr>
+    {% for follower in followers %}
+    <a href="{{ url_for('profile', user_id=follower['user_id']) }}"><h2>{{ follower['display'] }}</h2><p>@{{ follower['username'] }}</p></a>
+    <hr>
+    {% endfor %}
+</div>
+{% endblock %}
