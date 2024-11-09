@@ -10,9 +10,12 @@ import string
 from flask_mail import Mail, Message
 from sqlalchemy import create_engine, text
 from datetime import date
-from profanity_check import predict
 from html import escape
 import validators
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from flask import Flask
 
@@ -23,10 +26,10 @@ beta = True
 
 # Replace the following with your MySQL connection details
 
-app.config['MAIL_SERVER']='[ REDACTED ]'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USERNAME'] = 'api'
-app.config['MAIL_PASSWORD'] = '[ REDACTED ]'
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER') or ''
+app.config['MAIL_PORT'] = os.getenv('MAIL_PORT') or 587
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME') or ''
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD') or ''
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -38,17 +41,17 @@ mail = Mail(app)
 
 recaptcha = ReCaptcha(
     app=app,
-    site_key="[ REDACTED ]",
-    site_secret="[ REDACTED ]",
+    site_key=os.getenv('RECAPTCHA_SITE_KEY') or '',
+    site_secret=os.getenv('RECAPTCHA_SECRET_KEY') or '',
 )
 
 def generate_token():
     return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
 
-username = '[ REDACTED ]'
-password = '[ REDACTED ]'
-host = '[ REDACTED ]'
-database = '[ REDACTED ]'
+username = os.getenv('DB_USERNAME') or 'root'
+password = os.getenv('DB_PASSWORD') or ''
+host = os.getenv('DB_HOST') or '127.0.0.1'
+database = os.getenv('DB_NAME') or 'Postaverse'
 
 # Creating the connection URL and engine
 connection_url = f"mysql+mysqlconnector://{username}:{password}@{host}/{database}"
@@ -142,8 +145,8 @@ def home(page):
 
 @app.route("/signup", methods=["POST"])
 def signup():
-    temp = 1
-    if not recaptcha.verify():
+    temp = 0
+    if not recaptcha.verify() and not os.getenv('RECAPTCHA_SECRET_KEY'):
         error = "re-captcha failed."
         return render_template("signup.html", error=error)
         
@@ -193,10 +196,6 @@ def signup():
 
     if not username:
         error = "Username required."
-        return render_template("signup.html", error=error)
-
-    if predict([username]) == 1:
-        error = "Profanity Blocker detected something."
         return render_template("signup.html", error=error)
 
     if db.execute(text("SELECT email FROM Users WHERE email = :email AND username = :username"), {'email': email, 'username': username}).fetchone():
@@ -298,10 +297,6 @@ def post():
 
     if db.execute(text("SELECT * FROM Banned WHERE user_id = :uid"), {'uid': session["user_id"]}).fetchone():
         return "You are banned."
-
-    if predict([content]) == 1 or predict([name]) == 1:
-        error = "Profanity Blocker detected something."
-        return render_template("postbuilder.html", error=error)
     
     db.execute(text("INSERT INTO Posts (user_id, content, created_at, name) VALUES (:id, :content, UTC_TIMESTAMP(), :name)"), {'id': user_id, 'content': content, 'name': name})
 
@@ -408,10 +403,6 @@ def profile(user_id):
 @app.route("/update-bio", methods=["POST"])
 def updateBio():
     content = request.form.get("content")
-
-    if predict([content]) == 1:
-        error = "Profanity Blocker detected something"
-        return render_template("account.html", error=error)
 
     if db.execute(text("SELECT * FROM Banned WHERE user_id = :uid"), {'uid': session["user_id"]}).fetchone():
         return "You are banned."
@@ -568,10 +559,6 @@ def post_comment(post_id):
 
     if db.execute(text("SELECT * FROM Banned WHERE user_id = :uid"), {'uid': session["user_id"]}).fetchone():
         return "You are banned."
-
-    if predict([comment_content]) == 1:
-        error = "Profanity Blocker detected something"
-        return redirect(url_for('viewPost', post_id=post_id, error=error))
 
     if not comment_content:
         flash('Comment cannot be empty!')
@@ -755,10 +742,6 @@ def betaaa():
 @app.route("/display-name-change", methods=["POST"])
 def dNC():
     display = request.form.get("display")
-
-    if predict([display]) == 1:
-        error = "Profanity Blocker detected something."
-        return redirect(url_for('account', error=error))
     
     db.execute(text("UPDATE Users SET display = :d WHERE user_id = :uid"), {'d': display, 'uid': session["user_id"]})
     db.commit()

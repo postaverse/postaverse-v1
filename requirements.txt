@@ -1,0 +1,12 @@
+Flask
+Flask-Session
+Flask-Bcrypt
+google-recaptcha
+flask-mail
+SQLAlchemy
+validators
+setuptools
+joblib
+numpy
+mysql-connector-python
+python-dotenv
